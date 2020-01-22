@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header /> should match snapshot 1`] = `
+<header>
+  <nav>
+    <Link
+      to="/weather/petersburg"
+    >
+       Saint-Peterburg 
+    </Link>
+    <Link
+      to="/weather/moscow"
+    >
+       Moscow 
+    </Link>
+    <Link
+      to="/weather/rostov"
+    >
+       Rostov 
+    </Link>
+  </nav>
+</header>
+`;

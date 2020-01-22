@@ -1,14 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+
+const activeStyle = {
+    border: '1px solid red',
+    color: 'red',
+    fontWeight: 'bold'
+}
 
 function Header() {
 
     return (
         <header>
             <nav>
-                <Link to={'/weather/petersburg'}> Saint-Peterburg </Link>
-                <Link to={'/weather/moscow'}> Moscow </Link> 
-                <Link to={'/weather/rostov'}> Rostov </Link>  
+                <NavLink activeStyle={activeStyle} to={'/weather/petersburg'}> Saint-Peterburg </NavLink>
+                <NavLink activeStyle={activeStyle} to={'/weather/moscow'}> Moscow </NavLink> 
+                <NavLink activeStyle={activeStyle} to={'/weather/rostov'}> Rostov </NavLink>  
             </nav>
         </header>
     ) 
