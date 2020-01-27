@@ -1,13 +1,22 @@
 import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga';
+import { getWeatherSaga } from '../actions/actionsCreators'
 import rootReducder from '../reducers';
 
+const sagaMiddleware = createSagaMiddleware()
+
 function configureStore(initialState) {
-    return createStore(
+    const store = createStore(
         rootReducder,
         initialState,
-        applyMiddleware(thunk)
+        applyMiddleware(sagaMiddleware)
     );
+
+    sagaMiddleware.run(getWeatherSaga);
+
+    return store;
 }
+
+
 
 export default configureStore;

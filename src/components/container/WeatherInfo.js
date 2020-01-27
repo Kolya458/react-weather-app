@@ -1,36 +1,34 @@
-import React from 'react';
-import { weatherFetchData } from '../../actions/actionsCreators';
+import React, { useEffect } from 'react';
+import { weatherNewRequest } from '../../actions/actionsCreators';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import CityWeather from '../presentational/CityWeather';
-import { GET_WEATHER_URL } from '../../constants/constants';
 import { getCurrentWeatherSelector } from '../../selectors/selectors';
 import PropTypes from 'prop-types';
 
-class WeatherInfo extends React.PureComponent {
+function WeatherInfo(props) {
 
-    componentDidUpdate = (prevProps) => {
-            if(this.props.city !== prevProps.city) {
-            this.props.fetchData(GET_WEATHER_URL(this.props.city));
-        };
-    };
+    const { city } = useParams();
 
-    componentDidMount() {
-        this.props.fetchData(GET_WEATHER_URL(this.props.city));
+    useEffect(() => {
+        async function fetchData() {
+            await props.fetchData(city);
+        }
+        fetchData();
+    });
+
+    if (props.hasError) {
+        return <p>Sorry! there was an error loading the weather</p>
     }
 
-    render() {
-        if (this.props.hasError) {
-            return <p>Sorry! there was an error loading the weather</p>
-        }
-
-        if (this.props.isLoading) {
-            return <p>loading...</p>
-        }
-
-        return (
-            <CityWeather weather = {this.props.weather} city = {this.props.city} />
-        )
+    if (props.isLoading) {
+        return <p>loading...</p>
     }
+
+    return (
+        <CityWeather weather = {props.weather} city = {city} />
+    )
+    
 }
 
 const mapStateToProps = state => ({
@@ -40,11 +38,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: (url) => dispatch(weatherFetchData(url))
+    fetchData: (city) => dispatch(weatherNewRequest(city))
 });
 
 WeatherInfo.propTypes = {
-    city: PropTypes.string.isRequired,
     weather: PropTypes.string.isRequired,
     hasError: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired

@@ -1,39 +1,47 @@
-import { WEATHER_IS_LOADING, WEATHER_HAS_ERROR, FETCH_WEATHER_SUCCESS } from './actionsTypes';
-import axios from 'axios';
+import { WEATHER_IS_LOADING, WEATHER_HAS_ERROR, FETCH_WEATHER_SUCCESS, WEATHER_NEW_REQUEST } from './actionsTypes';
+import { call, put, takeEvery } from "redux-saga/effects";
+import { weatherApi } from '../services/weatherApi';
 
-export function weatherIsLoading(bool) {
+function weatherIsLoading(bool) {
     return {
         type: WEATHER_IS_LOADING,
         isLoading: bool
     }
 }
 
-export function weatherHasError(bool) {
+function weatherHasError(bool) {
     return {
         type: WEATHER_HAS_ERROR,
         hasError: bool
     }
 }
 
-export function weatherFetchDataSuccess(degrees) {
+function weatherFetchDataSuccess(degrees) {
     return {
         type: FETCH_WEATHER_SUCCESS,
         degrees
     }
 }
 
-export function weatherFetchData(url) {
-    return (dispatch) => {
-
-        dispatch(weatherIsLoading(true));
-
-        axios.get(url)
-            .then(response => {
-                dispatch(weatherIsLoading(false))
-                return response.data.main.temp;
-            })
-            .then(degrees => dispatch(weatherFetchDataSuccess(degrees)))
-            .catch(() => dispatch(weatherHasError(true)));
+export function weatherNewRequest(city) {
+    return {
+        type: WEATHER_NEW_REQUEST,
+        city
     }
+}
+
+export function* fetchWeatherSaga(action) {
+    try {
+        yield put(weatherIsLoading(true));
+        const weather = yield call(weatherApi, action.city);
+        yield put(weatherIsLoading(false));
+        yield put(weatherFetchDataSuccess(weather));
+    } catch (err) {
+        yield put(weatherHasError(err));
+    }
+}
+
+export function* getWeatherSaga() {
+    yield takeEvery(WEATHER_NEW_REQUEST, fetchWeatherSaga);
 }
 

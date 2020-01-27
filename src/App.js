@@ -9,8 +9,7 @@ function App() {
     <React.Fragment>
       <BrowserRouter>
         <Header />
-        <Route path='/weather/:city' component={ props => 
-          <WeatherInfo city={ props.match.params.city }/> }/>
+        <Route path='/weather/:city'><WeatherInfo /></Route>
       </BrowserRouter>
     </React.Fragment>
   );
